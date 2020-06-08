@@ -15,33 +15,29 @@ clear all
 
 %% Load Data - Training Set
 
-%----- CHOOSE ONE OPTION BELOW TO LOAD DATA -----%
-% -- OPTION 1: --
+inputfile = "PLSData.xlsx";
+d = uigetdir('Select a folder');
+data = readmatrix(d+"/"+inputfile);
 
-% inputfile = "231-PLSData.xlsx";
-% d = uigetdir('Select a folder');
-% data = readmatrix(d+"/"+inputfile);
+% Assign variables --> change according to data matrix
 
-% -- OPTION 2: --
-
-% Manually input file path: (more streamlined)
-d = "/Users/jananibaskaran/Box/Oudin Lab/Shared Data/Janani Baskaran/Matlab Resources";
-data = readmatrix(d+"/231-PLSData.xlsx", 'Sheet', 'Sheet1');
-
-% Assign variables
-
-  Y0i = data(1:5, [13:15]);     % cell response variables (n by m matrix)
+  Y0i = data(1:10, [13:15]);     % cell response variables (n by m matrix)
    
-  X0i = data(1:5, [2:12]);      % cell shape variables (n by p matrix)
+  X0i = data(1:10, [2:12]);      % cell shape variables (n by p matrix)
 
 % Name the ECM conditions and X and Y labels (will be useful for labeling
 % graphs)
 
-    CondLabs = {'Control'
-        'C1'
-        'FN'
-        'TNC'
-        'C4'
+    CondLabs = {'231-Control'
+        '231-C1'
+        '231-FN'
+        '231-TNC'
+        '231-C4'
+        '468-Control'
+        '468-C1'
+        '468-FN'
+        '468-TNC'
+        '468-C4'
             };
     
     Xlabs = {'Area/Cell (sq um)'
@@ -57,8 +53,6 @@ data = readmatrix(d+"/231-PLSData.xlsx", 'Sheet', 'Sheet1');
         'Solidity'       
         };
     
-    %--- can also input labels from excel sheet:
-    %Xlabs = readcell(d+"/Xlabs.xlsx", 'Sheet', 'Sheet1');
     
     Ylabs = {'2D Speed'
         '2D Persistence'
@@ -75,7 +69,7 @@ data = readmatrix(d+"/231-PLSData.xlsx", 'Sheet', 'Sheet1');
  Y0 = (Y0i) ./(sqrt(var(Y0i)));
 
 %% Run the PLS
-Pcomps = 4;     % define number of PCS (maximum = no. of ECM Conditions - 1)
+Pcomps = 9;     % define number of PCS (maximum = no. of ECM Conditions - 1)
 
 [Xloadings,Yloadings,Xscores,Yscores,beta,PctVar,mse,stats] = plsregress(X0,Y0,Pcomps);
     % X loading - p-by-pcomp matrix; coefficients define linear comb. of
@@ -93,7 +87,7 @@ Pcomps = 4;     % define number of PCS (maximum = no. of ECM Conditions - 1)
     % stats - structure with different statitics, used to calculate VIP
         % Scores
 
-%% ---- Plot Variance Explained by PC --> this is the R^2:
+%% ---- Plot Variance Explained by PC
 R2 = cumsum(100*PctVar(2,:));
 figure
 subplot(1,2,1)
@@ -157,7 +151,7 @@ text(Yscores(:,1)+dx, Yscores(:,2)+dy, CondLabs, 'Fontsize', 10, 'Interpreter', 
 %% ---- Calculate VIP Scores: for each Y variable
 
 Pcomps = 2;     % with #PC ideal for model
-for k = 1:3         % change so easier to adjust
+for k = 1:3         
 [Xl,Yl,Xs,Ys,beta,PctVar,mse,stats] = plsregress(X0,Y0(:,k),Pcomps);
 
 W = stats.W;
@@ -207,7 +201,7 @@ set(gca,'xticklabel',Xlabs,'XTickLabelRotation',45);
 
 Pcomps = [1 2 3 4];
 
-   X1i = data(6, 2:12);    %shape parameters for new ECM
+   X1i = data(6, 2:12);    % test data
    X1 = X1i ./ (sqrt(var(X0i)));        % scale
    Ypreds = zeros(4,3);
    Ypred = zeros(4,3);
