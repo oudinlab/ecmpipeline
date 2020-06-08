@@ -1,5 +1,5 @@
 # ecmpipeline
-This repository includes the Matlab code and pipeline data used in the Oudin Lab. Please see Baskaran et al., APL Bioengineering, 2020 for more information.
+This repository includes the Matlab code and pipeline data used in the Oudin Lab. Please see Baskaran et al., APL Bioengineering, 2020 for more information. https://doi.org/10.1063/1.5143779
 
 Files Included:
 - Matlab Code Notes - word document with annotations on basic code elements and how to use the scripts (also links to resources to learn more about the analyses)
